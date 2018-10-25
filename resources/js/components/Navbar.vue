@@ -23,38 +23,32 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            routeHome: {
-                type: String
-            },
-            routeMy: {
-                type: String
-            },
-            routeWelcome: {
-                type: String
-            }
+import * as string from './mixins/string.js';
+
+export default {
+    props: {
+        routeHome: {
+            type: String
         },
-        data() {
-            return {
-                href: window.location.href
-            };
+        routeMy: {
+            type: String
         },
-        created() {
-            console.log(`this.routeHome: ${this.routeHome}`);
-            console.log(`this.routeMy: ${this.routeMy}`);
-            console.log(`this.routeWelcome: ${this.routeWelcome}`);
-        },
-        methods: {
-            strcmp(a, b) {
-                a = a.toString(), b = b.toString();
-                for (var i = 0, n = Math.max(a.length, b.length); 
-                    i < n && a.charAt(i) === b.charAt(i); 
-                    ++i) {}
-                if (i === n) 
-                    return 0;
-                return a.charAt(i) > b.charAt(i) ? -1 : 1;
-            }
+        routeWelcome: {
+            type: String
         }
+    },
+    data() {
+        return {
+            href: window.location.href
+        };
+    },
+    created() {
+        console.log(`this.routeHome: ${this.routeHome}`);
+        console.log(`this.routeMy: ${this.routeMy}`);
+        console.log(`this.routeWelcome: ${this.routeWelcome}`);
+    },
+    methods: {
+        strcmp: string.strcmp
     }
+}
 </script>

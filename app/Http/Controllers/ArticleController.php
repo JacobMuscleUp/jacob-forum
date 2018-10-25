@@ -20,7 +20,7 @@ class ArticleController extends Controller
         return ArticleResource::collection($articles);
     }
 
-    public function showMine($user)
+    public function indexFiltered($user)
     {
         $articles = Article::where('author', $user)->orderBy('created_at', 'desc')->paginate(5);
         return ArticleResource::collection($articles);
@@ -42,6 +42,10 @@ class ArticleController extends Controller
         $article->title = $request->input('title');
         $article->body = $request->input('body');
         $article->author = $request->input('author');
+        $article->editor = $request->input('editor');
+        $article->img_urls = $request->input('imgUrls');
+        if ($request->isMethod('post'))
+            $article->view_count = 0;
 
         if ($article->save())
             return new ArticleResource($article);
@@ -81,6 +85,14 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
         if ($article->delete())
+            return new ArticleResource($article);
+    }
+
+    public function updateViewCount(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        ++$article->view_count;
+        if ($article->save())
             return new ArticleResource($article);
     }
 }

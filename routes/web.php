@@ -17,7 +17,7 @@ Route::get('/', function () {
 })->name('welcome');
 */
 
-Auth::routes(['verify' => true]);
+Auth::routes();
 
 Route::get('/', 'NavbarController@welcome')->name('welcome');
 Route::get('/home', 'NavbarController@home')->name('home');

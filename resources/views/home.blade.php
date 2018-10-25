@@ -5,9 +5,10 @@
     <navbar 
         route-home="{{ route('home') }}"
         route-my="{{ route('my') }}"
-        route-welcome="{{ route('welcome') }}">
-    </navbar>
-    <articles v-bind:fetch-all="true" user="{{ Auth::user()->name }}"></articles>
+        route-welcome="{{ route('welcome') }}"></navbar>
+    <articles 
+        v-bind:fetch-all="true" 
+        user="{{ Auth::user()->name }}"></articles>
 </div>
 @endsection
 
