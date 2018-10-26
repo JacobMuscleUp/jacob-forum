@@ -345,7 +345,7 @@ export default {
       const func = function(method, msg) {
         instance.comment.author = instance.user;
         instance.comment.articleId = instance.article.id;
-        /*fetch("/index.php/api/comment", {
+        fetch("/index.php/api/comment", {
           method: method,
           body: JSON.stringify(instance.comment),
           headers: {
@@ -362,7 +362,7 @@ export default {
               }
             );
           })
-          .catch(err => console.log(err));*/
+          .catch(err => console.log(err));
       };
       func("post", "A comment has been created");
     },

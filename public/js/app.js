@@ -47660,7 +47660,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.article.author = article.author;
       this.article.editor = article.editor;
       this.article.imgUrls = article.img_urls;
-      this.article.editor = article.editor;
 
       this.fetchComments("/index.php/api/comments/" + article.id);
       fetch("/index.php/api/article/" + article.id, {
@@ -47691,7 +47690,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     addComment: function addComment() {
       var instance = this;
       var func = function func(method, msg) {
-        instance.comment.author = instance.author;
+        instance.comment.author = instance.user;
         instance.comment.articleId = instance.article.id;
         fetch("/index.php/api/comment", {
           method: method,
@@ -47811,7 +47810,7 @@ var render = function() {
                 _vm._l(_vm.imgUrls, function(imgUrl) {
                   return _c(
                     "div",
-                    { key: imgUrl.id, staticClass: "form-group" },
+                    { key: JSON.stringify(imgUrl), staticClass: "form-group" },
                     [
                       _c("img", {
                         staticClass: "img-resize no-drop",
@@ -48155,7 +48154,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _vm._l(JSON.parse(_vm.article.imgUrls), function(imgUrl) {
-              return _c("div", { key: imgUrl.id }, [
+              return _c("div", { key: JSON.stringify(imgUrl) }, [
                 _c("a", { attrs: { target: "_blank", href: imgUrl.text } }, [
                   _c("img", {
                     staticClass: "img-resize mb-2",
