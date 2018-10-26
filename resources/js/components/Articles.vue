@@ -380,12 +380,12 @@ export default {
           this.imgUrls.splice(i, 1);
           break;
         }
-      }
+   /*  }
     },
     onImgUploadFail(imgUrl) {
       this.undoUploadImg(imgUrl);
       alert('the image url is invalid');
     }
-  }
+  }*/
 };
 </script>
