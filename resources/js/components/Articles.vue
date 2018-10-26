@@ -344,7 +344,7 @@ export default {
     addComment() {
       const instance = this;
       const func = function(method, msg) {
-        instance.comment.author = instance.author;
+        instance.comment.author = instance.user;
         instance.comment.articleId = instance.article.id;
         fetch("/index.php/api/comment", {
           method: method,
