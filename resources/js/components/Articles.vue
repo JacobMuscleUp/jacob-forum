@@ -11,7 +11,7 @@
                 <div 
                   class="form-group"
                   v-for="imgUrl in imgUrls"
-                  v-bind:key="imgUrl.id">
+                  v-bind:key="JSON.stringify(imgUrl)">
                   <img 
                     class="img-resize no-drop"
                     v-bind:src="imgUrl.text" 
@@ -106,7 +106,7 @@
             <p>Edited by <b>{{ article.editor || article.author }}</b></p>
             <div
               v-for="imgUrl in JSON.parse(article.imgUrls)"
-              v-bind:key="imgUrl.id">
+              v-bind:key="JSON.stringify(imgUrl)">
               <a
                 target="_blank"
                 v-bind:href="imgUrl.text">
@@ -316,7 +316,6 @@ export default {
       this.article.author = article.author;
       this.article.editor = article.editor;
       this.article.imgUrls = article.img_urls;
-      this.article.editor = article.editor;
 
       this.fetchComments(`/index.php/api/comments/${article.id}`);
       fetch(`/index.php/api/article/${article.id}`, {
