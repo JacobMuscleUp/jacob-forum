@@ -14,7 +14,7 @@ $factory->define(App\Article::class, function (Faker $faker) {
         'body' => $faker->text(200),
         'author' => $faker->text(10),
         'editor' => $faker->text(10),
-        'img_urls' => "[".$imgUrls[rand(0, $imgUrls.length - 1)]."]",
+        'img_urls' => "[".$imgUrls[rand(0, sizeof($imgUrls) - 1)]."]",
         'view_count' => 0
     ];
 });
