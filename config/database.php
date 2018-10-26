@@ -4,10 +4,10 @@
 $url = getenv('CLEARDB_DATABASE_URL');
 $dbparts = parse_url($url);
 
-$hostname = $dbparts['host'];
-$username = $dbparts['user'];
-$password = $dbparts['pass'];
-$database = ltrim($dbparts['path'],'/');
+$hostname = $url ? $dbparts['host'] : 'hostname';
+$username = $url ? $dbparts['user'] : 'username';
+$password = $url ? $dbparts['pass'] : 'password';
+$database = $url ? ltrim($dbparts['path'],'/') : 'database';
 
 return [
 
