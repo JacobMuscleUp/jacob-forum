@@ -8,11 +8,11 @@
                 <a 
                     class="navbar-brand" 
                     v-bind:href="routeHome"
-                    v-if="strcmp(href, routeHome) !== 0">Home Page</a>
+                    v-if="strcmp(href, routeHome) !== 0 && strcmp(href, `${routeHome}#`) !== 0">Home Page</a>
                 <a 
                     class="navbar-brand" 
                     v-bind:href="routeMy"
-                    v-if="strcmp(href, routeMy) !== 0">My Page</a>
+                    v-if="strcmp(href, routeMy) !== 0 && strcmp(href, `${routeMy}#`) !== 0">My Page</a>
                 <a class="navbar-brand" v-bind:href="routeWelcome">Welcome Page</a>
             </div>
         </nav>
@@ -46,6 +46,7 @@ export default {
         console.log(`this.routeHome: ${this.routeHome}`);
         console.log(`this.routeMy: ${this.routeMy}`);
         console.log(`this.routeWelcome: ${this.routeWelcome}`);
+        console.log(`this.href: ${this.href}`);
     },
     methods: {
         strcmp: string.strcmp

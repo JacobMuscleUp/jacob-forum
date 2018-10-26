@@ -1,6 +1,23 @@
 <template>
     <div>
         <div class="container" v-if="!articleView">
+            <div align="center">
+              <button 
+                class="btn"
+                v-bind:class="{ 'btn-warning': (!editMode || modeCreate2Edit === 0) }"
+                v-on:mouseenter="modeCreate2Edit = 0"
+                v-on:mouseleave="modeCreate2Edit = -1"
+                v-on:click="abortEditArticle">
+                <font size="10">Create</font>
+              </button>
+              <button 
+                class="btn" 
+                v-bind:class="{ 'btn-warning': editMode, 'btn-danger': (!editMode && modeCreate2Edit === 1) }"
+                v-on:mouseover="modeCreate2Edit = 1"
+                v-on:mouseleave="modeCreate2Edit = -1">
+                <font size="10">Edit</font>
+              </button>
+            </div>
             <form v-on:submit.prevent="updateArticle">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Title" v-model="article.title">
@@ -22,9 +39,9 @@
                   <div class="form-group">
                       <input type="text" id="img-url" class="form-control" placeholder="Image Url" v-model="imgUrl.text">
                   </div>
-                  <button type="submit" class="btn btn-light btn-block">Upload the image</button>
+                  <button type="submit" class="btn btn-light btn-block">Upload Image</button>
                 </form>
-                <button type="submit" class="btn btn-light btn-block">Post the article</button>
+                <button type="submit" class="btn btn-light btn-block">Post Article</button>
             </form>
 
             <hr>
@@ -55,7 +72,7 @@
                 </ul>
             </nav>
             <form v-on:submit.prevent="gotoTargetPage">
-                <input type="text" id="target-page" placeholder="Page" v-model="targetPage">
+                <input type="text" placeholder="Page" v-model="targetPage">
                 <button type="submit" class="btn btn-light btn-block">Go</button>
             </form>
 
@@ -87,7 +104,7 @@
                 <template v-if="strcmp(user, article.author) === 0 || isAdmin">
                     <button 
                         class="btn btn-warning mb-2"
-                        v-on:click="editArticle(article)">
+                        v-on:click="prepareEditArticle(article)">
                         Edit
                     </button>
                     <button 
@@ -183,7 +200,9 @@ export default {
       imgUrl: {
         id: 0,
         text: ""
-      }
+      },
+
+      modeCreate2Edit: -1
     };
   },
   created() {
@@ -276,10 +295,13 @@ export default {
           })
           .catch(err => console.log(err));
       };
-      if (this.editMode) func("put", "The article has been edited");
-      else func("post", "An article has been created");
+
+      if (this.editMode) 
+        func("put", "The article has been edited");
+      else 
+        func("post", "An article has been created");
     },
-    editArticle(article) {
+    prepareEditArticle(article) {
       this.editMode = true;
       this.article.id = article.id;
       this.article.title = article.title;
@@ -287,10 +309,14 @@ export default {
       this.article.author = article.author;
       this.imgUrls = JSON.parse(article.img_urls);
 
-      var href = window.location.href;
-      if (href[href.length - 1] === '#')
-        href = href.substring(0, href.length - 1);
-      window.location.href = `${href}#`;
+      this.navPageTop();
+    },
+    abortEditArticle() {
+      this.editMode = false;
+      this.article.id = '';
+      this.article.title = '';
+      this.article.body = '';
+      this.imgUrls = [];
     },
     gotoTargetPage() {
       const targetPage = parseInt(this.targetPage);
@@ -305,7 +331,8 @@ export default {
           }?page=${this.targetPage}`
         );
 
-      document.getElementById("target-page").value = this.targetPage = "";
+      this.targetPage = "";
+      this.navPageTop();
     },
     openArticle(article) {
       this.articleView = true;
@@ -321,6 +348,7 @@ export default {
       fetch(`/index.php/api/article/${article.id}`, {
         method: 'post'
       });
+      this.navPageTop();
     },
     closeArticle() {
       this.articleView = false;
@@ -330,6 +358,7 @@ export default {
       this.article.body = "";
 
       this.fetchArticles(`/index.php/api/articles${this.fetchAll ? "" : `/${this.user}`}`);
+      this.navPageTop();
     },
     fetchComments(pageUrl, callback) {
       fetch(pageUrl)
@@ -385,6 +414,13 @@ export default {
     onImgUploadFail(imgUrl) {
       this.undoUploadImg(imgUrl);
       alert('the image url is invalid');
+    },
+    //utils
+    navPageTop() {
+      var href = window.location.href;
+      if (href[href.length - 1] === '#')
+        href = href.substring(0, href.length - 1);
+      window.location.href = `${href}#`;
     }
   }
 };

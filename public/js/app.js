@@ -47506,6 +47506,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -47543,7 +47560,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       imgUrl: {
         id: 0,
         text: ""
-      }
+      },
+
+      modeCreate2Edit: -1
     };
   },
   created: function created() {
@@ -47631,9 +47650,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           return console.log(err);
         });
       };
+
       if (this.editMode) func("put", "The article has been edited");else func("post", "An article has been created");
     },
-    editArticle: function editArticle(article) {
+    prepareEditArticle: function prepareEditArticle(article) {
       this.editMode = true;
       this.article.id = article.id;
       this.article.title = article.title;
@@ -47641,15 +47661,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.article.author = article.author;
       this.imgUrls = JSON.parse(article.img_urls);
 
-      var href = window.location.href;
-      if (href[href.length - 1] === '#') href = href.substring(0, href.length - 1);
-      window.location.href = href + "#";
+      this.navPageTop();
+    },
+    abortEditArticle: function abortEditArticle() {
+      this.editMode = false;
+      this.article.id = '';
+      this.article.title = '';
+      this.article.body = '';
+      this.imgUrls = [];
     },
     gotoTargetPage: function gotoTargetPage() {
       var targetPage = parseInt(this.targetPage);
       if (isNaN(targetPage)) alert("The page needs to be an integer");else if (Math.min(Math.max(1, targetPage), this.pagination.lastPage) !== targetPage) alert("The page is out of range");else this.fetchArticles("/index.php/api/articles" + (this.fetchAll ? "" : "/" + this.user) + "?page=" + this.targetPage);
 
-      document.getElementById("target-page").value = this.targetPage = "";
+      this.targetPage = "";
+      this.navPageTop();
     },
     openArticle: function openArticle(article) {
       this.articleView = true;
@@ -47665,6 +47691,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       fetch("/index.php/api/article/" + article.id, {
         method: 'post'
       });
+      this.navPageTop();
     },
     closeArticle: function closeArticle() {
       this.articleView = false;
@@ -47674,6 +47701,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.article.body = "";
 
       this.fetchArticles("/index.php/api/articles" + (this.fetchAll ? "" : "/" + this.user));
+      this.navPageTop();
     },
     fetchComments: function fetchComments(pageUrl, callback) {
       var _this3 = this;
@@ -47730,6 +47758,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     onImgUploadFail: function onImgUploadFail(imgUrl) {
       this.undoUploadImg(imgUrl);
       alert('the image url is invalid');
+    },
+
+    //utils
+    navPageTop: function navPageTop() {
+      var href = window.location.href;
+      if (href[href.length - 1] === '#') href = href.substring(0, href.length - 1);
+      window.location.href = href + "#";
     }
   }
 });
@@ -47748,6 +47783,50 @@ var render = function() {
           "div",
           { staticClass: "container" },
           [
+            _c("div", { attrs: { align: "center" } }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn",
+                  class: {
+                    "btn-warning": !_vm.editMode || _vm.modeCreate2Edit === 0
+                  },
+                  on: {
+                    mouseenter: function($event) {
+                      _vm.modeCreate2Edit = 0
+                    },
+                    mouseleave: function($event) {
+                      _vm.modeCreate2Edit = -1
+                    },
+                    click: _vm.abortEditArticle
+                  }
+                },
+                [_c("font", { attrs: { size: "10" } }, [_vm._v("Create")])],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn",
+                  class: {
+                    "btn-warning": _vm.editMode,
+                    "btn-danger": !_vm.editMode && _vm.modeCreate2Edit === 1
+                  },
+                  on: {
+                    mouseover: function($event) {
+                      _vm.modeCreate2Edit = 1
+                    },
+                    mouseleave: function($event) {
+                      _vm.modeCreate2Edit = -1
+                    }
+                  }
+                },
+                [_c("font", { attrs: { size: "10" } }, [_vm._v("Edit")])],
+                1
+              )
+            ]),
+            _vm._v(" "),
             _c(
               "form",
               {
@@ -47873,7 +47952,7 @@ var render = function() {
                         staticClass: "btn btn-light btn-block",
                         attrs: { type: "submit" }
                       },
-                      [_vm._v("Upload the image")]
+                      [_vm._v("Upload Image")]
                     )
                   ]
                 ),
@@ -47884,7 +47963,7 @@ var render = function() {
                     staticClass: "btn btn-light btn-block",
                     attrs: { type: "submit" }
                   },
-                  [_vm._v("Post the article")]
+                  [_vm._v("Post Article")]
                 )
               ],
               2
@@ -47989,11 +48068,7 @@ var render = function() {
                       expression: "targetPage"
                     }
                   ],
-                  attrs: {
-                    type: "text",
-                    id: "target-page",
-                    placeholder: "Page"
-                  },
+                  attrs: { type: "text", placeholder: "Page" },
                   domProps: { value: _vm.targetPage },
                   on: {
                     input: function($event) {
@@ -48094,7 +48169,7 @@ var render = function() {
                             staticClass: "btn btn-warning mb-2",
                             on: {
                               click: function($event) {
-                                _vm.editArticle(article)
+                                _vm.prepareEditArticle(article)
                               }
                             }
                           },
@@ -48363,6 +48438,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         console.log('this.routeHome: ' + this.routeHome);
         console.log('this.routeMy: ' + this.routeMy);
         console.log('this.routeWelcome: ' + this.routeWelcome);
+        console.log('this.href: ' + this.href);
     },
 
     methods: {
@@ -48384,7 +48460,8 @@ var render = function() {
       { staticClass: "navbar navbar-expand-sm navbar-dark bg-info mb-2" },
       [
         _c("div", { staticClass: "container" }, [
-          _vm.strcmp(_vm.href, _vm.routeHome) !== 0
+          _vm.strcmp(_vm.href, _vm.routeHome) !== 0 &&
+          _vm.strcmp(_vm.href, _vm.routeHome + "#") !== 0
             ? _c(
                 "a",
                 { staticClass: "navbar-brand", attrs: { href: _vm.routeHome } },
@@ -48392,7 +48469,8 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.strcmp(_vm.href, _vm.routeMy) !== 0
+          _vm.strcmp(_vm.href, _vm.routeMy) !== 0 &&
+          _vm.strcmp(_vm.href, _vm.routeMy + "#") !== 0
             ? _c(
                 "a",
                 { staticClass: "navbar-brand", attrs: { href: _vm.routeMy } },
