@@ -15,6 +15,16 @@
     php artisan migrate[:fresh]
     php artisan db:seed
 
+    php artisan key:generate --show
+
+/*.env Setup*/
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=
+    DB_USERNAME=
+    DB_PASSWORD=
+
 /*Heroku*/
     git init
     git add .
@@ -28,6 +38,8 @@
     OR
     heroku run php artisan migrate[:fresh]
     heroku run php artisan db:seed (required: "fzaninotto/faker")
+
+    add {"APP_NAME",""}, {"DB_PORT",""}, {"APP_KEY",""} to ConfigVars(aka env)
 
 /*Heroku Database*/
     (1)JawsDB MySQL
